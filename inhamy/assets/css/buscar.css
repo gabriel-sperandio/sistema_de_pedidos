@@ -1,0 +1,75 @@
+/* Container da busca centralizado e com largura máxima */
+.buscar-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* Formulário com layout em linha */
+.buscar-form {
+    display: flex;
+    position: relative;
+}
+
+/* Campo de texto com bordas arredondadas e foco estilizado */
+.buscar-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.buscar-input:focus {
+    border-color: #1da1f2; /* azul no foco */
+    box-shadow: 0 0 5px rgba(29, 161, 242, 0.3);
+}
+
+/* Botão de busca posicionado sobre o campo */
+.buscar-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #657786;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Caixa de resultados oculta por padrão, com rolagem */
+.buscar-resultados {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+}
+
+/* Itens da lista de resultados com destaque no hover */
+.buscar-resultado-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.buscar-resultado-item:hover {
+    background-color: #f5f8fa;
+}
+
+/* Remove a borda do último item */
+.buscar-resultado-item:last-child {
+    border-bottom: none;
+}

@@ -1,0 +1,130 @@
+/* Importe o menu */
+@import url('components/menu.css');
+@import url('buscar.css');
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ebdbaf;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 360px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    border: none;
+    background: none;
+    flex: 1;
+    font-size: 16px;
+    outline: none;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.dish-image {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.item-name {
+    flex: 1;
+}
+
+.item button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #888;
+    background-color: white;
+    cursor: pointer;
+}
+
+.item .added {
+    background-color: #c6d6c2;
+    color: #fff;
+    border: none;
+}
+
+.botao {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #68a16b;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+.botao:hover {
+    background-color: #91d189;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    border-top: 1px solid #ccc;
+    background-color: #fff;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.nav i {
+    font-size: 20px;
+    color: #333;
+}
+
+.nav div {
+    text-align: center;
+    font-size: 12px;
+    color: #333;
+}
+.nav a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav div.active i,
+.nav div.active {
+    color: #000;
+}
+
