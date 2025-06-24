@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 
 // Conexão e CRUD primeiro
 require 'includes/db.php'; // Altere para 'config/db.php' se preferir
-require_once 'crud_pratos.php';
+require_once 'admin/crud_pratos.php';
 
 $crud = new PratoCRUD();
 $produtos = $crud->listar();

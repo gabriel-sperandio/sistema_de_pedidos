@@ -1,9 +1,9 @@
 <?php
-require_once 'includes/db.php'; // Alterado para includes/db.php
+require_once 'includes/db.php'; // inclui a conexão ao banco
 
 class PratoCRUD {
     private $conn;
-    
+
     public function __construct() {
         global $conn;
         if (!$conn) {
@@ -11,7 +11,7 @@ class PratoCRUD {
         }
         $this->conn = $conn;
     }
-    
+
     public function criar($dados) {
         $stmt = $this->conn->prepare(
             "INSERT INTO pratos 
@@ -20,7 +20,7 @@ class PratoCRUD {
         );
         
         $stmt->bind_param(
-            "ssisisd",
+            "sssiisd",
             $dados['nome'],
             $dados['ingredientes'],
             $dados['tempo_preparo'],
@@ -29,24 +29,22 @@ class PratoCRUD {
             $dados['imagem'],
             $dados['preco']
         );
-        
+
         return $stmt->execute();
     }
-    
+
     public function listar() {
-        $result = $this->conn->query("
-            SELECT * FROM pratos 
-            WHERE ativo = 1 
-            ORDER BY nome ASC
-        ");
-        
+        $result = $this->conn->query(
+            "SELECT * FROM pratos WHERE ativo = 1 ORDER BY nome ASC"
+        );
+
         if (!$result) {
             throw new Exception("Erro ao listar pratos: " . $this->conn->error);
         }
-        
+
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-    
+
     public function atualizar($id, $dados) {
         $stmt = $this->conn->prepare(
             "UPDATE pratos SET 
@@ -54,9 +52,9 @@ class PratoCRUD {
             categoria = ?, favorito = ?, imagem = ?, preco = ?
             WHERE id = ?"
         );
-        
+
         $stmt->bind_param(
-            "ssisisd",
+            "ssisisdi",
             $dados['nome'],
             $dados['ingredientes'],
             $dados['tempo_preparo'],
@@ -66,14 +64,12 @@ class PratoCRUD {
             $dados['preco'],
             $id
         );
-        
+
         return $stmt->execute();
     }
-    
+
     public function deletar($id) {
-        $stmt = $this->conn->prepare(
-            "UPDATE pratos SET ativo = 0 WHERE id = ?"
-        );
+        $stmt = $this->conn->prepare("UPDATE pratos SET ativo = 0 WHERE id = ?");
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
