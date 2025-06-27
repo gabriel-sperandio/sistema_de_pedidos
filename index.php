@@ -1,62 +1,126 @@
 <?php
-// DEBUG: Mostra todos os erros
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require_once __DIR__ . '/includes/Database.php';
+require_once __DIR__ . '/app/models/PratoModel.php';
+require_once __DIR__ . '/app/controllers/PratoController.php';
 
-// Conexão e CRUD primeiro
-require 'includes/db.php'; // Altere para 'config/db.php' se preferir
-require_once 'admin/crud_pratos.php';
+$controller = new PratoController();
 
-$crud = new PratoCRUD();
-$produtos = $crud->listar();
+// Processa ações
+if (isset($_GET['action'])) {
+    switch ($_GET['action']) {
+        case 'salvar':
+            $controller->salvar();
+            break;
+        case 'excluir':
+            $controller->excluir();
+            break;
+    }
+}
 
-// Depois o HTML
-include 'includes/header.php';
+$produtos = $controller->listarPratos();
+
+require __DIR__ . '/includes/header.php';
 ?>
 
-<main class="cardapio-container">
-    <h1>Cardápio Digital</h1>
-    
-    <!-- Mensagens de debug -->
-    <div class="container mb-4">
-        <div class="alert alert-info">
-            <h4>Debug:</h4>
-            <p>PHP está funcionando corretamente.</p>
-            <?php if (!empty($produtos)): ?>
-                <p>✅ <strong><?= count($produtos) ?></strong> produtos carregados do banco.</p>
-            <?php else: ?>
-                <p class="text-danger">❌ Nenhum produto encontrado no banco.</p>
-            <?php endif; ?>
+<div class="container mt-4">
+    <!-- Formulário de Cadastro -->
+    <div class="card mb-5">
+        <div class="card-header">
+            <h2><?= isset($_GET['editar']) ? 'Editar' : 'Cadastrar' ?> Prato</h2>
         </div>
-    </div>
-
-    <!-- Listagem de produtos -->
-    <div class="container">
-        <div class="row">
-            <?php foreach ($produtos as $produto): ?>
-                <div class="col-md-4 col-sm-6 mb-4">
-                    <div class="card h-100">
-                        <img src="<?= htmlspecialchars($produto['imagem'] ?? 'img/sem-foto.jpg') ?>" 
-                             class="card-img-top" 
-                             alt="<?= htmlspecialchars($produto['nome']) ?>">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
-                            <p class="card-text"><?= htmlspecialchars($produto['ingredientes']) ?></p>
-                            <p class="text-muted">
-                                <small><?= $produto['tempo_preparo'] ?> min • <?= $produto['categoria'] ?></small>
-                            </p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary btn-adicionar" 
-                                    data-id="<?= $produto['id'] ?>">
-                                <i class="bi bi-cart-plus"></i> R$ <?= number_format($produto['preco'], 2, ',', '.') ?>
-                            </button>
+        <div class="card-body">
+            <form method="post" action="?action=salvar" enctype="multipart/form-data">
+                <?php if (isset($_GET['editar'])): ?>
+                    <input type="hidden" name="id" value="<?= $_GET['editar'] ?>">
+                <?php endif; ?>
+                
+                <div class="mb-3">
+                    <label class="form-label">Nome*</label>
+                    <input type="text" name="nome" class="form-control" required 
+                           value="<?= $pratoEdicao['nome'] ?? '' ?>">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Ingredientes*</label>
+                    <textarea name="ingredientes" class="form-control" required><?= $pratoEdicao['ingredientes'] ?? '' ?></textarea>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Tempo (min)</label>
+                        <input type="number" name="tempo_preparo" class="form-control" 
+                               value="<?= $pratoEdicao['tempo_preparo'] ?? '' ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Categoria</label>
+                        <input type="text" name="categoria" class="form-control" 
+                               value="<?= $pratoEdicao['categoria'] ?? '' ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Preço*</label>
+                        <input type="number" step="0.01" name="preco" class="form-control" required 
+                               value="<?= $pratoEdicao['preco'] ?? '' ?>">
+                    </div>
+                    <div class="col-md-3 pt-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="favorito" value="1" 
+                                <?= isset($pratoEdicao['favorito']) && $pratoEdicao['favorito'] ? 'checked' : '' ?>>
+                            <label class="form-check-label">Favorito</label>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+                
+                <div class="mb-3">
+                    <label class="form-label">Imagem</label>
+                    <input type="file" name="imagem" class="form-control">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </form>
         </div>
     </div>
-</main>
 
-<?php include 'includes/menu.php'; ?>
+    <!-- Lista de Pratos -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Cardápio</h2>
+        </div>
+        <div class="card-body">
+            <?php if (!empty($produtos)): ?>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Ingredientes</th>
+                                <th>Tempo</th>
+                                <th>Preço</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($produtos as $produto): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($produto['nome']) ?></td>
+                                    <td><?= htmlspecialchars($produto['ingredientes']) ?></td>
+                                    <td><?= $produto['tempo_preparo'] ?> min</td>
+                                    <td>R$ <?= number_format($produto['preco'], 2, ',', '.') ?></td>
+                                    <td>
+                                        <a href="?editar=<?= $produto['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
+                                        <a href="?action=excluir&id=<?= $produto['id'] ?>" 
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Tem certeza?')">Excluir</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <div class="alert alert-info">Nenhum prato cadastrado ainda.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<?php require __DIR__ . '/includes/footer.php'; ?>
