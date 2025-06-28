@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="email">Login</label>
             <input type="email" name="email" placeholder="E-mail" required>
 
-            <input type="text" name="codigo" placeholder="Código" required>
+            <input type="text" name="senha" placeholder="Senha" required>
 
             <a href="#" class="link">Esqueceu o código?</a>
 
