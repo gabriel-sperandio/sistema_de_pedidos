@@ -14,12 +14,12 @@ $erro = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $senha = $_POST['senha']; // Não filtre senhas!
-    
+
     try {
         $db = new Database();
         $stmt = $db->query("SELECT id, nome, senha, is_admin FROM usuarios WHERE email = ?", [$email]);
         $usuario = $stmt->fetch();
-        
+
         if ($usuario && password_verify($senha, $usuario['senha'])) {
             // Login bem-sucedido
             $_SESSION['usuario'] = [
@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'nome' => $usuario['nome'],
                 'is_admin' => $usuario['is_admin']
             ];
-            
+
             // Atualiza último login (opcional)
             $db->query("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?", [$usuario['id']]);
-            
+
             header('Location: /');
             exit;
         } else {
@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,25 +55,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             background-color: #f8f9fa;
         }
+
         .login-container {
             max-width: 400px;
             margin: 100px auto;
             padding: 20px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .h2 {
+            font-family: 'Brush Script MT', cursive;
+            color: #7d5a8a;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="login-container">
             <h2 class="text-center mb-4">Login</h2>
-            
+
             <?php if ($erro): ?>
                 <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
             <?php endif; ?>
-            
+
             <form method="POST">
                 <div class="mb-3">
                     <label for="email" class="form-label">E-mail</label>
@@ -87,4 +95,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </body>
+
 </html>
