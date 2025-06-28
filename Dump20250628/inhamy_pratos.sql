@@ -99,7 +99,7 @@ VALUES (
   );
   (
     5,
-    'Berinjela Grelhada',
+    'berinjela grelhada',
     'berinjela, chimichurri, azeite',
     60,
     'vegetariano',
@@ -110,7 +110,7 @@ VALUES (
   );
   (
     6,
-    'Strogonoff de Cogumelos',
+    'strogonoff de cogumelos',
     'cogumelos, arroz branco, creme vegetal, batata palha',
     60,
     'ovolactovegetariano',
@@ -119,7 +119,19 @@ VALUES (
     NULL,
     1
   );
+  (
+    7,
+    'salada mediterrânea',
+    'tomatinhos-cereja, cubos de pão rústico, alface, rucula',
+    60,
+    'vegano',
+    'salada.fit.png',
+    12.00,
+    NULL,
+    1
+  );
   
+
 /*!40000 ALTER TABLE `pratos` ENABLE KEYS */
 ;
 UNLOCK TABLES;
