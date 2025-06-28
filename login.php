@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/Database.php';
 
 // Redireciona se já estiver logado
 if (!empty($_SESSION['usuario'])) {
-    header('Location: /');
+    header('Location: index.php');
     exit;
 }
 
@@ -13,7 +13,7 @@ $erro = null;
 // Processar login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    $senha = $_POST['senha']; // Não filtre senhas!
+    $senha = $_POST['senha'];
     
     try {
         $db = new Database();
@@ -28,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'is_admin' => $usuario['is_admin']
             ];
             
-            // Atualiza último login (opcional)
+            // Atualiza último login
             $db->query("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?", [$usuario['id']]);
             
-            header('Location: /');
+            header('Location: index.php');
             exit;
         } else {
             $erro = "Credenciais inválidas!";
@@ -51,9 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login - Sistema de Pedidos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
+        body { background-color: #f8f9fa; }
         .login-container {
             max-width: 400px;
             margin: 100px auto;
@@ -65,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="login-container">
             <h2 class="text-center mb-4">Login</h2>
             

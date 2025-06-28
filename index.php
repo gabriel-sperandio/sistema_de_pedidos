@@ -3,6 +3,30 @@ require_once __DIR__ . '/includes/Database.php';
 require_once __DIR__ . '/app/models/PratoModel.php';
 require_once __DIR__ . '/app/controllers/PratoController.php';
 
+session_start();
+
+// Verifica se o usuário está logado
+if (empty($_SESSION['usuario'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$isAdmin = ($_SESSION['usuario']['is_admin'] == 1);
+
+// Configurações iniciais
+require __DIR__ . '/includes/header.php';
+
+// Saúda o usuário
+if (isset($_SESSION['usuario'])) {
+    echo '<div class="text-end p-2">';
+    echo 'Olá, ' . htmlspecialchars($_SESSION['usuario']['nome']);
+    if ($isAdmin) {
+        echo '<span class="badge bg-secondary">Admin</span>';
+    }
+    echo ' | <a href="logout.php">Sair</a>';
+    echo '</div>';
+}
+
 $controller = new PratoController();
 
 // Processa ações
@@ -12,115 +36,72 @@ if (isset($_GET['action'])) {
             $controller->salvar();
             break;
         case 'excluir':
-            $controller->excluir();
+            if ($isAdmin) {
+                $controller->excluir();
+            }
             break;
     }
 }
 
+// Preenche prato para edição
+$pratoEdicao = array();
+if (isset($_GET['editar'])) {
+    $pratoEdicao = $controller->buscarPratoPorId($_GET['editar']);
+}
+
+// Obtém os produtos
 $produtos = $controller->listarPratos();
 
-require __DIR__ . '/includes/header.php';
+// Filtra pratos favoritos (substituição da arrow function)
+$pratosFiltrados = array_filter($produtos, function($p) {
+    return !empty($p['favorito']);
+});
+$pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
 ?>
 
 <div class="container mt-4">
-    <!-- Formulário de Cadastro -->
-    <div class="card mb-5">
-        <div class="card-header">
-            <h2><?= isset($_GET['editar']) ? 'Editar' : 'Cadastrar' ?> Prato</h2>
-        </div>
-        <div class="card-body">
-            <form method="post" action="?action=salvar" enctype="multipart/form-data">
-                <?php if (isset($_GET['editar'])): ?>
-                    <input type="hidden" name="id" value="<?= $_GET['editar'] ?>">
-                <?php endif; ?>
-                
-                <div class="mb-3">
-                    <label class="form-label">Nome*</label>
-                    <input type="text" name="nome" class="form-control" required 
-                           value="<?= $pratoEdicao['nome'] ?? '' ?>">
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Ingredientes*</label>
-                    <textarea name="ingredientes" class="form-control" required><?= $pratoEdicao['ingredientes'] ?? '' ?></textarea>
-                </div>
-                
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label class="form-label">Tempo (min)</label>
-                        <input type="number" name="tempo_preparo" class="form-control" 
-                               value="<?= $pratoEdicao['tempo_preparo'] ?? '' ?>">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Categoria</label>
-                        <input type="text" name="categoria" class="form-control" 
-                               value="<?= $pratoEdicao['categoria'] ?? '' ?>">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Preço*</label>
-                        <input type="number" step="0.01" name="preco" class="form-control" required 
-                               value="<?= $pratoEdicao['preco'] ?? '' ?>">
-                    </div>
-                    <div class="col-md-3 pt-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="favorito" value="1" 
-                                <?= isset($pratoEdicao['favorito']) && $pratoEdicao['favorito'] ? 'checked' : '' ?>>
-                            <label class="form-check-label">Favorito</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Imagem</label>
-                    <input type="file" name="imagem" class="form-control">
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Salvar</button>
-            </form>
-        </div>
+    <!-- Carrossel de favoritos -->
+    <?php include __DIR__ . '/app/views/carrosselPratos.php'; ?>
+
+    <!-- Botão Carrinho -->
+    <div class="text-end mb-3">
+        <a href="carrinho.php" class="btn btn-outline-primary">Ver Carrinho</a>
     </div>
 
-    <!-- Lista de Pratos -->
-    <div class="card">
-        <div class="card-header">
-            <h2>Cardápio</h2>
-        </div>
-        <div class="card-body">
-            <?php if (!empty($produtos)): ?>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Ingredientes</th>
-                                <th>Tempo</th>
-                                <th>Preço</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($produtos as $produto): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($produto['nome']) ?></td>
-                                    <td><?= htmlspecialchars($produto['ingredientes']) ?></td>
-                                    <td><?= $produto['tempo_preparo'] ?> min</td>
-                                    <td>R$ <?= number_format($produto['preco'], 2, ',', '.') ?></td>
-                                    <td>
-                                        <a href="?editar=<?= $produto['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
-                                        <a href="?action=excluir&id=<?= $produto['id'] ?>" 
-                                           class="btn btn-sm btn-danger"
-                                           onclick="return confirm('Tem certeza?')">Excluir</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+    <!-- Lista de pratos -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        <?php foreach ($produtos as $prato) { ?>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="uploads/<?php echo isset($prato['imagem']) ? htmlspecialchars($prato['imagem']) : 'sem-imagem.jpg'; ?>" 
+                         class="card-img-top" 
+                         style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title"><?php echo htmlspecialchars($prato['nome']); ?></h5>
+                        <p class="card-text"><?php echo htmlspecialchars($prato['ingredientes']); ?></p>
+                        <p class="mt-auto fw-bold">R$ <?php echo number_format($prato['preco'], 2, ',', '.'); ?></p>
+                        <form action="carrinho_adicionar.php" method="post">
+                            <input type="hidden" name="id" value="<?php echo $prato['id']; ?>">
+                            <button type="submit" class="btn btn-primary w-100">Adicionar ao Carrinho</button>
+                        </form>
+                    </div>
                 </div>
-            <?php else: ?>
-                <div class="alert alert-info">Nenhum prato cadastrado ainda.</div>
-            <?php endif; ?>
-        </div>
+            </div>
+        <?php } ?>
     </div>
+
+    <!-- Formulário de Cadastro (admin) -->
+    <?php if ($isAdmin) { ?>
+        <a href="?action=novo" class="btn btn-success mb-3">+ Novo Prato</a>
+        
+        <?php if (isset($_GET['action']) && ($_GET['action'] == 'novo' || isset($_GET['editar']))) { ?>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <?php include __DIR__ . '/app/views/pratos/form.php'; ?>
+                </div>
+            </div>
+        <?php } ?>
+    <?php } ?>
 </div>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>

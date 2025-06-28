@@ -75,4 +75,12 @@ class PratoModel {
         $sql = "DELETE FROM pratos WHERE id = ?";
         return $this->db->query($sql, [$id])->rowCount() > 0;
     }
+
+    public function atualizarFavorito($pratoId, $favorito) {
+        $sql = "UPDATE pratos SET favorito = :favorito WHERE id = :id";
+        $stmt = Database::prepare($sql);
+        $stmt->bindParam(':favorito', $favorito, PDO::PARAM_BOOL);
+        $stmt->bindParam(':id', $pratoId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 }
