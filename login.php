@@ -51,31 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema de Pedidos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .h2 {
-            font-family: 'Brush Script MT', cursive;
-            color: #7d5a8a;
-        }
-
-    </style>
+    <link rel="stylesheet" href="/assets/css/login.css">
+   
 </head>
 
 <body>
     <div class="container-fluid">
         <div class="login-container">
-            <h2 class="text-center mb-4">Logi</h2>
+            <h2 class="text-center mb-4">Login</h2>
 
             <?php if ($erro): ?>
                 <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
