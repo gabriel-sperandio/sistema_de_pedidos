@@ -68,13 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-family: 'Brush Script MT', cursive;
             color: #7d5a8a;
         }
+
     </style>
 </head>
 
 <body>
     <div class="container-fluid">
         <div class="login-container">
-            <h2 class="text-center mb-4">Login</h2>
+            <h2 class="text-center mb-4">Logi</h2>
 
             <?php if ($erro): ?>
                 <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
