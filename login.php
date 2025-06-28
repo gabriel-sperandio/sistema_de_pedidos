@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/Database.php';
 
 // Redireciona se já estiver logado
 if (!empty($_SESSION['usuario'])) {
-    header('Location: /');
+    header('Location: index.php');
     exit;
 }
 
@@ -14,7 +14,7 @@ $erro = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $senha = $_POST['senha']; // Não filtre senhas!
-
+    
     try {
         $db = new Database();
         $stmt = $db->query("SELECT id, nome, senha, is_admin FROM usuarios WHERE email = ?", [$email]);
@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'nome' => $usuario['nome'],
                 'is_admin' => $usuario['is_admin']
             ];
-
+            
             // Atualiza último login (opcional)
             $db->query("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?", [$usuario['id']]);
-
+            
             header('Location: /');
             exit;
         } else {
@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             background-color: #f8f9fa;
         }
-
         .login-container {
             max-width: 400px;
             margin: 100px auto;
@@ -73,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="login-container">
             <h2 class="text-center mb-4">Login</h2>
 

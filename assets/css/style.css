@@ -10,10 +10,12 @@ body {
 }
 
 .container {
-    max-width: 360px;
-    margin: auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 20px;
     background: white;
+    box-sizing: border-box;
 }
 
 .search-box {
@@ -128,3 +130,13 @@ h2 {
     color: #000;
 }
 
+.favorito-form button {
+    font-size: 1.5rem;
+    color: gold;
+    cursor: pointer;
+}
+
+.carousel-item img {
+    max-height: 400px;
+    object-fit: cover;
+}
