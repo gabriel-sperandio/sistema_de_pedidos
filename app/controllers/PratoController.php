@@ -112,4 +112,4 @@ class PratoController {
     private function isAdmin() {
         return isset($_SESSION['usuario']) && $_SESSION['usuario']['is_admin'] == 1;
     }
-}''
+}
