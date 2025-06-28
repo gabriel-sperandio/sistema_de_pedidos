@@ -70,7 +70,7 @@ VALUES (
     'alface, manga, castanha de caju, molho de limão',
     45,
     'vegano',
-    'salada.jpg',
+    'salada.png',
     15.00,
     NULL,
     1
@@ -81,7 +81,7 @@ VALUES (
     'berinjela, molho de tomate, tofu',
     90,
     'lactovegetariano',
-    'lasanha.jpg',
+    'lasanha.png',
     25.00,
     NULL,
     1
@@ -92,11 +92,34 @@ VALUES (
     'maracujá, leite condensado vegano, creme vegetal',
     60,
     'sobremesa',
-    'mousse.jpg',
+    'mousse.png',
     12.00,
     NULL,
     1
   );
+  (
+    5,
+    'Berinjela Grelhada',
+    'berinjela, chimichurri, azeite',
+    60,
+    'vegetariano',
+    'berinjela.png',
+    12.00,
+    NULL,
+    1
+  );
+  (
+    6,
+    'Strogonoff de Cogumelos',
+    'cogumelos, arroz branco, creme vegetal, batata palha',
+    60,
+    'ovolactovegetariano',
+    'strogonoff.png',
+    12.00,
+    NULL,
+    1
+  );
+  
 /*!40000 ALTER TABLE `pratos` ENABLE KEYS */
 ;
 UNLOCK TABLES;
