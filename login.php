@@ -14,7 +14,7 @@ $erro = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $senha = $_POST['senha']; // Não filtre senhas!
-    
+
     try {
         $db = new Database();
         $stmt = $db->query("SELECT id, nome, senha, is_admin FROM usuarios WHERE email = ?", [$email]);
@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'nome' => $usuario['nome'],
                 'is_admin' => $usuario['is_admin']
             ];
-            
+
             // Atualiza último login (opcional)
             $db->query("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?", [$usuario['id']]);
-            
+
             header('Location: /');
             exit;
         } else {
@@ -52,31 +52,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login - Sistema de Pedidos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/login.css">
-   
+
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="login-container">
-            <h2 class="text-center mb-4">Login</h2>
+    <div class="container">
+        <h1 class="logo">Inhamy</h1>
+        <p>Bem-vindo de volta!</p>
 
-            <?php if ($erro): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
-            <?php endif; ?>
+        <?php if ($erro): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
+        <?php endif; ?>
 
-            <form method="POST">
-                <div class="mb-3">
-                    <label for="email" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="senha" class="form-label">Senha</label>
-                    <input type="password" class="form-control" id="senha" name="senha" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Entrar</button>
-            </form>
-        </div>
+        <form id="loginForm" action="login.php" method="POST">
+            <label for="email">Login</label>
+            <input type="email" name="email" placeholder="E-mail" required>
+
+            <input type="text" name="codigo" placeholder="Código" required>
+
+            <a href="#" class="link">Esqueceu o código?</a>
+
+
+            <button type="submit">Entrar</button>
+
+        </form>
     </div>
+    
 </body>
 
 </html>
