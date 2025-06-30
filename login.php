@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <input type="password" name="senha" placeholder="Senha" required>
 
-            <a href="#" class="link">Esqueceu o código?</a>
+            <a href="esqueceu_cod.php" class="link">Esqueceu o código?</a>
 
             <button type="submit">Entrar</button>
         </form>
