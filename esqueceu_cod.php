@@ -11,7 +11,7 @@
 <body>
 
     <div class="container">
-        <a href="login.php">&lt;Voltar</a>
+        <a href="login.php">&lt;</a>
         <h1 class="logo">Inhamy</h1>
 
 
