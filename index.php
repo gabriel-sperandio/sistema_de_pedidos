@@ -16,16 +16,6 @@ $isAdmin = ($_SESSION['usuario']['is_admin'] == 1);
 // Configurações iniciais
 require __DIR__ . '/includes/header.php';
 
-// Saúda o usuário
-if (isset($_SESSION['usuario'])) {
-    echo '<div class="text-end p-2">';
-    echo 'Olá, ' . htmlspecialchars($_SESSION['usuario']['nome']);
-    if ($isAdmin) {
-        echo '<span class="badge bg-secondary">Admin</span>';
-    }
-    echo ' | <a href="logout.php">Sair</a>';
-    echo '</div>';
-}
 
 $controller = new PratoController();
 
@@ -67,26 +57,30 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
     <div class="position-fixed" style="bottom: 80px; right: 20px; z-index: 1050;">
         <a href="carrinho.php" class="btn btn-outline-primary shadow">Ver Carrinho</a>
     </div>
-    
+
     <!-- Lista de pratos -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         <?php foreach ($produtos as $prato) { ?>
             <div class="col">
                 <div class="card h-100 shadow-sm">
-                    <img src="uploads/<?php echo isset($prato['imagem']) ? htmlspecialchars($prato['imagem']) : 'sem-imagem.jpg'; ?>"
-                        class="card-img-top"
-                        style="height: 200px; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title"><?php echo htmlspecialchars($prato['nome']); ?></h5>
-                        <p class="card-text"><?php echo htmlspecialchars($prato['ingredientes']); ?></p>
-                        <p class="mt-auto fw-bold">R$ <?php echo number_format($prato['preco'], 2, ',', '.'); ?></p>
-                        <form action="carrinho_adicionar.php" method="post">
-                            <input type="hidden" name="id" value="<?php echo $prato['id']; ?>">
-                            <button type="submit" class="btn btn-primary w-100">Adicionar ao Carrinho</button>
+                    <a href="detalhe_prato.php?id=<?= $prato['id'] ?>" class="text-decoration-none text-dark">
+                        <img src="uploads/<?= isset($prato['imagem']) ? htmlspecialchars($prato['imagem']) : 'sem-imagem.jpg'; ?>"
+                            class="card-img-top rounded-top"
+                            style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= htmlspecialchars($prato['nome']) ?></h5>
+                        </div>
+                    </a>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+                        <span class="fw-bold fs-5 mb-0">R$ <?= number_format($prato['preco'], 2, ',', '.') ?></span>
+                        <form action="carrinho_adicionar.php" method="post" class="mb-0">
+                            <input type="hidden" name="id" value="<?= $prato['id'] ?>">
+                            <button type="submit" class="btn btn-primary btn-sm px-3">Adicionar</button>
                         </form>
                     </div>
                 </div>
             </div>
+
         <?php } ?>
     </div>
 </div>

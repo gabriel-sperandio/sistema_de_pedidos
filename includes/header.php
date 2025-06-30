@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
+    
 </head>
 <body>
    <!-- No lugar onde você quer a barra de busca -->

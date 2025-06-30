@@ -31,8 +31,13 @@ class Database
             $stmt->execute($params);
             return $stmt;
         } catch (PDOException $e) {
-            // Isso vai mostrar no navegador o erro real da consulta SQL
             throw new Exception("Erro na query: " . $e->getMessage());
         }
+    }
+
+    // Método para pegar o objeto PDO e usar transações
+    public function getConnection()
+    {
+        return $this->pdo;
     }
 }

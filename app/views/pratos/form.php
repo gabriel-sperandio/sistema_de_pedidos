@@ -59,6 +59,7 @@
 
     <div class="d-flex justify-content-between">
         <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="/admin/dashboard.php" class="btn btn-secondary">Cancelar</a>
+        <a href="/sistema_de_pedidos/admin/dashboard.php" class="btn btn-secondary">Cancelar</a>
+
     </div>
 </form>

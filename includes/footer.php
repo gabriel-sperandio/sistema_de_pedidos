@@ -6,11 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seu Site</title>
     <style>
-        /* Adicione margem no body para o conteúdo não ficar escondido atrás do footer */
         body {
             margin: 0;
             padding: 0 0 60px 0;
-            /* 60px é a altura aproximada do footer */
             min-height: 100vh;
             box-sizing: border-box;
         }
@@ -28,7 +26,6 @@
             z-index: 1000;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
             height: 50px;
-            /* Altura fixa para consistência */
         }
 
         .nav i {
@@ -56,7 +53,6 @@
         .nav div.active i,
         .nav div.active {
             color: #0066cc;
-            /* Cor mais vibrante para o item ativo */
         }
 
         .nav div:not(.active):hover i,
@@ -64,25 +60,20 @@
             color: #333;
         }
     </style>
-    <!-- Adicione o link para o Font Awesome se ainda não estiver incluído -->
+
+    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
     <div class="nav">
-        <div class="active">
-            <a href="cardapio.php">
+        <div id="menu-item-cardapio">
+            <a href="index.php">
                 <i class="fas fa-utensils"></i><span>Cardápio</span>
             </a>
         </div>
 
-        <div>
-            <a href="oferta.php">
-                <i class="fas fa-star"></i><span>Ofertas</span>
-            </a>
-        </div>
-
-        <div>
+        <div id="menu-item-perfil">
             <a href="perfil.php">
                 <i class="fas fa-user"></i><span>Perfil</span>
             </a>
@@ -90,6 +81,28 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/app.js"></script>
+    <script>
+        // Função para destacar o item ativo no footer
+        function highlightActiveMenuItem() {
+            // Remove a classe active de todos os itens
+            document.querySelectorAll('.nav div').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Obtém o caminho atual (pathname) da URL
+            const currentPath = window.location.pathname;
+            
+            // Determina qual item deve receber a classe active
+            if (currentPath.includes('perfil.php')) {
+                document.getElementById('menu-item-perfil').classList.add('active');
+            } else {
+                // Padrão: Cardápio (index.php ou qualquer outra página)
+                document.getElementById('menu-item-cardapio').classList.add('active');
+            }
+        }
+        
+        // Executa a função quando a página carrega
+        document.addEventListener('DOMContentLoaded', highlightActiveMenuItem);
+    </script>
 </body>
 </html>
