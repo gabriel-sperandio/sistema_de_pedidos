@@ -12,9 +12,12 @@ body {
   background: white;
   padding: 2em;
   border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
   width: 300px;
+  border: 1px solid #b39ddb;
+  box-shadow: 2px 2px 4px rgba(238, 198, 238, 0.8),
+    -2px -2px 4px rgba(247, 213, 244, 0.8);
 }
+
 
 h1 {
   text-align: center;
@@ -68,6 +71,6 @@ button:hover {
 }
 
 a {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
