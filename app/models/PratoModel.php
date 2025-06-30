@@ -51,12 +51,18 @@ class PratoModel {
     }
 
     private function inserir($dados) {
-        $sql = "INSERT INTO pratos 
-                (nome, ingredientes, tempo_preparo, categoria, favorito, preco, imagem) 
-                VALUES 
-                (:nome, :ingredientes, :tempo_preparo, :categoria, :favorito, :preco, :imagem)";
-        return $this->db->query($sql, $dados)->rowCount() > 0;
-    }
+    $sql = "INSERT INTO pratos 
+            (nome, ingredientes, tempo_preparo, categoria, favorito, preco, imagem) 
+            VALUES 
+            (:nome, :ingredientes, :tempo_preparo, :categoria, :favorito, :preco, :imagem)";
+    
+    // Remover o 'id' do array
+    $params = $dados;
+    unset($params['id']);
+    
+    return $this->db->query($sql, $params)->rowCount() > 0;
+}
+
 
     private function atualizar($dados) {
         $sql = "UPDATE pratos SET 

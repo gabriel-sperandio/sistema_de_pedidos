@@ -1,8 +1,10 @@
 <?php
-class Database {
+class Database
+{
     private $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $host = 'localhost';
         $db   = 'inhamy';
         $user = 'root';
@@ -22,9 +24,15 @@ class Database {
         }
     }
 
-    public function query($sql, $params = []) {
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt;
+    public function query($sql, $params = [])
+    {
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            // Isso vai mostrar no navegador o erro real da consulta SQL
+            throw new Exception("Erro na query: " . $e->getMessage());
+        }
     }
 }
