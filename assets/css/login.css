@@ -1,5 +1,4 @@
-
- body {
+body {
   font-family: Arial, sans-serif;
   background-color: #fafafa;
   display: flex;
@@ -14,8 +13,9 @@
   background: white;
   padding: 2em;
   border-radius: 10px;
-  box-shadow: 0 0 10px #e4d9e1;
   width: 300px;
+  border: 1px solid #b39ddb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .logo {
