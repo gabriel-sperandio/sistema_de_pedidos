@@ -15,7 +15,8 @@ body {
   border-radius: 10px;
   width: 300px;
   border: 1px solid #b39ddb;
-  box-shadow: 0 4px 10px rgba(141, 100, 139, 0.15);
+  box-shadow: 2px 2px 4px rgba(138, 113, 138, 0.8),
+    -2px -2px 4px rgba(148, 112, 145, 0.8);
 }
 
 .logo {
