@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['is_admin'] != 1) {
+    header('Location: /index.php'); // redireciona para área do cliente
+    exit;
+}
+
 $titulo = 'Admin - Gerenciar Pratos';
 require_once __DIR__.'/../../includes/header.php';
 require_once __DIR__.'/../../includes/Database.php';

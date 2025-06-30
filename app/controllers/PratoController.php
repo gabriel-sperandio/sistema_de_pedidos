@@ -24,9 +24,19 @@ class PratoController
                 case 'novo':
                     // Apenas mostra o formulário
                     break;
+                case 'editar':
+                    $prato = $this->buscarPratoPorId($_GET['id']);
+                    $caminhoForm = __DIR__ . '/../views/pratos/form.php';
+                    if (file_exists($caminhoForm)) {
+                        include $caminhoForm;
+                    } else {
+                        throw new Exception("Arquivo do formulário não encontrado: " . $caminhoForm);
+                    }
+                    break;
             }
         }
     }
+
 
     public function listarPratos()
     {
@@ -42,59 +52,76 @@ class PratoController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                $nome = trim($_POST['nome']);
+                $ingredientes = trim($_POST['ingredientes']);
+                $preco = floatval($_POST['preco']);
+                $tempo = intval($_POST['tempo_preparo']);
+                $categoria = $_POST['categoria'];
+
+                if ($preco < 0) throw new Exception("Preço inválido.");
+                if ($tempo <= 0) throw new Exception("Tempo inválido.");
+                if (!in_array($categoria, ['entrada', 'principal', 'sobremesa'])) {
+                    throw new Exception("Categoria inválida.");
+                }
+
                 $imagem = $this->processarUploadImagem();
 
                 $dados = [
                     'id' => $_POST['id'] ?? null,
-                    'nome' => $_POST['nome'],
-                    'ingredientes' => $_POST['ingredientes'],
-                    'tempo_preparo' => $_POST['tempo_preparo'] ?? null,
-                    'categoria' => $_POST['categoria'] ?? null,
+                    'nome' => $nome,
+                    'ingredientes' => $ingredientes,
+                    'tempo_preparo' => $tempo,
+                    'categoria' => $categoria,
                     'favorito' => isset($_POST['favorito']) ? 1 : 0,
-                    'preco' => $_POST['preco'],
+                    'preco' => $preco,
                     'imagem' => $imagem ?? ($_POST['imagem_atual'] ?? 'default.jpg')
                 ];
+
+                error_log("🔧 Controller - Enviando dados para model: " . print_r($dados, true));
 
                 if ($this->model->salvar($dados)) {
                     $_SESSION['mensagem'] = ['tipo' => 'success', 'texto' => 'Prato salvo com sucesso!'];
                 } else {
-                    $_SESSION['mensagem'] = ['tipo' => 'danger', 'texto' => 'Erro ao salvar prato.'];
+                    $_SESSION['mensagem'] = ['tipo' => 'danger', 'texto' => 'Erro ao salvar prato (model retornou false).'];
                 }
             } catch (Exception $e) {
-                $_SESSION['mensagem'] = ['tipo' => 'danger', 'texto' => $e->getMessage()];
+                echo "<h4>Erro no salvar(): " . $e->getMessage() . "</h4>";
+                echo "<pre>POST:\n" . print_r($_POST, true) . "</pre>";
+                echo "<pre>FILES:\n" . print_r($_FILES, true) . "</pre>";
+                exit;
             }
 
-            header('Location: index.php');
+            header('Location: dashboard.php');
             exit;
         }
     }
 
-   private function processarUploadImagem() {
-    if (!empty($_FILES['imagem']['name']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $diretorio = realpath(__DIR__ . '/../../uploads/');
 
-        if (!$diretorio || !is_dir($diretorio)) {
-            throw new Exception("Diretório de uploads não encontrado.");
+    private function processarUploadImagem()
+    {
+        if (!empty($_FILES['imagem']['name']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+            $diretorio = realpath(__DIR__ . '/../../uploads/');
+
+            if (!$diretorio || !is_dir($diretorio)) {
+                throw new Exception("Diretório de uploads não encontrado.");
+            }
+
+            if (!is_writable($diretorio)) {
+                throw new Exception("Diretório de uploads sem permissão de escrita.");
+            }
+
+            $nomeArquivo = uniqid() . '_' . basename($_FILES['imagem']['name']);
+            $caminhoDestino = $diretorio . DIRECTORY_SEPARATOR . $nomeArquivo;
+
+            if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminhoDestino)) {
+                return $nomeArquivo;
+            } else {
+                throw new Exception("Erro ao mover o arquivo para: " . $caminhoDestino);
+            }
         }
 
-        if (!is_writable($diretorio)) {
-            throw new Exception("Diretório de uploads sem permissão de escrita.");
-        }
-
-        $nomeArquivo = uniqid() . '_' . basename($_FILES['imagem']['name']);
-        $caminhoDestino = $diretorio . DIRECTORY_SEPARATOR . $nomeArquivo;
-
-        if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminhoDestino)) {
-            return $nomeArquivo;
-        } else {
-            throw new Exception("Erro ao mover o arquivo para: " . $caminhoDestino);
-        }
+        return null; // nenhuma imagem enviada
     }
-
-    return null; // nenhuma imagem enviada
-}
-
-
 
     public function excluir()
     {
@@ -104,10 +131,11 @@ class PratoController
             } else {
                 $_SESSION['mensagem'] = ['tipo' => 'danger', 'texto' => 'Erro ao excluir prato.'];
             }
-            header('Location: index.php');
+            header('Location: dashboard.php'); // <== corrigido aqui
             exit;
         }
     }
+
 
     public function marcarFavorito($pratoId, $favorito)
     {

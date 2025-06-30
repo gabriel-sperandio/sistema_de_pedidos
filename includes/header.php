@@ -7,14 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
 </head>
 <body>
-    <div class="buscar-container">
-        <form action="buscar.php" method="get" class="buscar-form">
-            <input type="text" name="q" placeholder="Buscar pratos..." class="buscar-input">
-            <button type="submit" class="buscar-button">
-                <i class="bi bi-search"></i>
-            </button>
-        </form>
-    </div>
-    <main class="container-fluid">
+   <!-- No lugar onde você quer a barra de busca -->
+<?php include 'buscar.php'; ?>

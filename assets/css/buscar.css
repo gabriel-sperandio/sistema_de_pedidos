@@ -1,75 +1,109 @@
-/* Container da busca centralizado e com largura máxima */
-.buscar-container {
+.search-minimal {
     position: relative;
     width: 100%;
-    max-width: 600px;
+    max-width: 400px;
     margin: 0 auto;
-    padding: 15px;
 }
 
-/* Formulário com layout em linha */
-.buscar-form {
-    display: flex;
+.search-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
-/* Campo de texto com bordas arredondadas e foco estilizado */
-.buscar-input {
-    flex: 1;
+.search-input {
+    width: 100%;
     padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    font-size: 16px;
+    padding-right: 40px;
+    border: none;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: #333;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus {
     outline: none;
-    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-.buscar-input:focus {
-    border-color: #1da1f2; /* azul no foco */
-    box-shadow: 0 0 5px rgba(29, 161, 242, 0.3);
-}
-
-/* Botão de busca posicionado sobre o campo */
-.buscar-button {
+.search-btn {
     position: absolute;
     right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
+    background: transparent;
     border: none;
-    color: #657786;
     cursor: pointer;
-    font-size: 16px;
+    color: #ff6b6b;
+    transition: transform 0.3s ease;
 }
 
-/* Caixa de resultados oculta por padrão, com rolagem */
-.buscar-resultados {
+.search-btn:hover {
+    transform: scale(1.1);
+}
+
+.search-suggestions {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 0 0 4px 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    max-height: 400px;
-    overflow-y: auto;
-    display: none;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
-/* Itens da lista de resultados com destaque no hover */
-.buscar-resultado-item {
+.search-suggestions .suggestion {
     padding: 10px 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
 }
 
-.buscar-resultado-item:hover {
-    background-color: #f5f8fa;
+.search-suggestions .suggestion:hover {
+    background: #f8f9fa;
 }
 
-/* Remove a borda do último item */
-.buscar-resultado-item:last-child {
-    border-bottom: none;
+.search-suggestions .suggestion img {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.search-suggestions .suggestion .info {
+    flex: 1;
+}
+
+.search-suggestions .suggestion .title {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.search-suggestions .suggestion .type {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Efeito glassmorphism para header escuro */
+.dark-header .search-input {
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.dark-header .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dark-header .search-btn {
+    color: white;
 }

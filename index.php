@@ -53,7 +53,7 @@ if (isset($_GET['editar'])) {
 $produtos = $controller->listarPratos();
 
 // Filtra pratos favoritos (substituição da arrow function)
-$pratosFiltrados = array_filter($produtos, function($p) {
+$pratosFiltrados = array_filter($produtos, function ($p) {
     return !empty($p['favorito']);
 });
 $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
@@ -63,19 +63,19 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
     <!-- Carrossel de favoritos -->
     <?php include __DIR__ . '/app/views/carrosselPratos.php'; ?>
 
-    <!-- Botão Carrinho -->
-    <div class="text-end mb-3">
-        <a href="carrinho.php" class="btn btn-outline-primary">Ver Carrinho</a>
+    <!-- Botão ver carrinho -->
+    <div class="position-fixed" style="bottom: 80px; right: 20px; z-index: 1050;">
+        <a href="carrinho.php" class="btn btn-outline-primary shadow">Ver Carrinho</a>
     </div>
-
+    
     <!-- Lista de pratos -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         <?php foreach ($produtos as $prato) { ?>
             <div class="col">
                 <div class="card h-100 shadow-sm">
-                    <img src="uploads/<?php echo isset($prato['imagem']) ? htmlspecialchars($prato['imagem']) : 'sem-imagem.jpg'; ?>" 
-                         class="card-img-top" 
-                         style="height: 200px; object-fit: cover;">
+                    <img src="uploads/<?php echo isset($prato['imagem']) ? htmlspecialchars($prato['imagem']) : 'sem-imagem.jpg'; ?>"
+                        class="card-img-top"
+                        style="height: 200px; object-fit: cover;">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title"><?php echo htmlspecialchars($prato['nome']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars($prato['ingredientes']); ?></p>
@@ -89,19 +89,6 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
             </div>
         <?php } ?>
     </div>
-
-    <!-- Formulário de Cadastro (admin) -->
-    <?php if ($isAdmin) { ?>
-        <a href="?action=novo" class="btn btn-success mb-3">+ Novo Prato</a>
-        
-        <?php if (isset($_GET['action']) && ($_GET['action'] == 'novo' || isset($_GET['editar']))) { ?>
-            <div class="card mb-4">
-                <div class="card-body">
-                    <?php include __DIR__ . '/app/views/pratos/form.php'; ?>
-                </div>
-            </div>
-        <?php } ?>
-    <?php } ?>
 </div>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>

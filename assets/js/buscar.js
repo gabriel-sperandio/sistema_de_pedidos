@@ -1,61 +1,97 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const buscarInput = document.getElementById('buscarInput');
-    const buscarForm = document.getElementById('buscarForm');
-    const buscarResultados = document.getElementById('buscarResultados');
-    let buscarTimeout;
+document.addEventListener('DOMContentLoaded', () => {
+    const searchForm = document.querySelector('.search-form');
+    const searchInput = searchForm.querySelector('input[name="q"]');
+    const searchType = searchForm.querySelector('input[name="tipo"]');
+    const suggestionsContainer = document.querySelector('.search-suggestions');
+    let debounceTimer;
 
-    // Busca em tempo real com atraso de 300ms
-    buscarInput.addEventListener('input', function() {
-        clearTimeout(buscarTimeout);
-        const query = this.value.trim();
+    // Detecta contexto automaticamente
+    if (window.location.pathname.includes('carrinho') || 
+        window.location.pathname.includes('cardapio')) {
+        searchType.value = 'pratos';
+        searchInput.placeholder = 'Buscar pratos...';
+    }
+
+    // Busca em tempo real
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        const query = e.target.value.trim();
         
-        // Oculta resultados se a busca for muito curta
-        if (query.length < 2) {
-            buscarResultados.style.display = 'none';
+        if (query.length > 1) {
+            debounceTimer = setTimeout(() => fetchSuggestions(query), 300);
+        } else {
+            suggestionsContainer.style.display = 'none';
+        }
+    });
+
+    // Foco na barra
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim().length > 1) {
+            fetchSuggestions(searchInput.value.trim());
+        }
+    });
+
+    // Fecha sugestões ao clicar fora
+    document.addEventListener('click', (e) => {
+        if (!searchForm.contains(e.target)) {
+            suggestionsContainer.style.display = 'none';
+        }
+    });
+
+    // Função para buscar sugestões
+    async function fetchSuggestions(query) {
+        try {
+            const response = await fetch(
+                `buscar_unificado.php?q=${encodeURIComponent(query)}&live=1&tipo=${searchType.value}`
+            );
+            const results = await response.json();
+            showSuggestions(results);
+        } catch (error) {
+            console.error('Erro na busca:', error);
+        }
+    }
+
+    // Mostra sugestões
+    function showSuggestions(results) {
+        if (!results || results.length === 0) {
+            suggestionsContainer.innerHTML = '<div class="suggestion">Nada encontrado</div>';
+            suggestionsContainer.style.display = 'block';
             return;
         }
 
-        // Aguarda 300ms antes de fazer a busca
-        buscarTimeout = setTimeout(() => {
-            fetchBuscarResultados(query);
-        }, 300);
-    });
-
-    // Redireciona para a página de busca completa ao submeter o formulário
-    buscarForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const query = buscarInput.value.trim();
-        if (query) {
-            window.location.href = `buscar.php?q=${encodeURIComponent(query)}`;
-        }
-    });
-
-    // Esconde resultados ao clicar fora da área de busca
-    document.addEventListener('click', function(e) {
-        if (!buscarForm.contains(e.target)) {
-            buscarResultados.style.display = 'none';
-        }
-    });
-
-    // Busca os resultados via fetch e atualiza a lista
-    function fetchBuscarResultados(query) {
-        fetch(`includes/buscar.php?q=${encodeURIComponent(query)}&live=1`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    buscarResultados.innerHTML = data.map(post => `
-                        <div class="buscar-resultado-item" onclick="window.location='post.php?id=${post.id}'">
-                            <strong>${post.name}</strong> @${post.username}
-                            <p>${post.content.substring(0, 50)}${post.content.length > 50 ? '...' : ''}</p>
+        suggestionsContainer.innerHTML = results.map(item => {
+            if (searchType.value === 'pratos') {
+                return `
+                    <div class="suggestion" data-id="${item.id}">
+                        ${item.imagem ? `<img src="${item.imagem}" alt="${item.nome}">` : ''}
+                        <div class="info">
+                            <div class="title">${item.nome}</div>
+                            <div class="type">Prato • R$ ${item.preco?.toFixed(2) || '0,00'}</div>
                         </div>
-                    `).join('');
-                } else {
-                    buscarResultados.innerHTML = '<div class="buscar-resultado-item">Nenhum resultado encontrado</div>';
-                }
-                buscarResultados.style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Erro na busca:', error);
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="suggestion" data-id="${item.id}">
+                        <div class="info">
+                            <div class="title">${item.name || item.username}</div>
+                            <div class="type">Post • ${item.content?.substring(0, 30) || ''}...</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }).join('');
+
+        // Adiciona eventos de clique
+        document.querySelectorAll('.suggestion').forEach(item => {
+            item.addEventListener('click', () => {
+                const url = searchType.value === 'pratos' 
+                    ? `detalhes_prato.php?id=${item.dataset.id}`
+                    : `post.php?id=${item.dataset.id}`;
+                window.location.href = url;
             });
+        });
+
+        suggestionsContainer.style.display = 'block';
     }
 });
