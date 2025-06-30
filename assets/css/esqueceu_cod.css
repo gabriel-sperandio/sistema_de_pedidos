@@ -9,12 +9,16 @@ body {
 }
 
 .container {
-  text-align: left;
+  text-align: center;
   background: white;
   padding: 2em;
   border-radius: 10px;
   box-shadow: 0 0 10px #ccc;
   width: 300px;
+}
+
+label {
+  text-align: left;
 }
 
 .logo {
