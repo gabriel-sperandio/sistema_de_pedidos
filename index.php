@@ -49,6 +49,26 @@ $pratosFiltrados = array_filter($produtos, function ($p) {
 $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
 ?>
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Tela Cardápio</title>
+
+    <style>
+        .card:hover {
+            background-color:rgb(187, 245, 192);
+            /* cor de fundo ao passar o mouse */
+            transition: background-color 0.3s ease;
+            /* suaviza a transição */
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+
+
 <div class="container mt-4">
     <!-- Carrossel de favoritos -->
     <?php include __DIR__ . '/app/views/carrosselPratos.php'; ?>
@@ -62,6 +82,7 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         <?php foreach ($produtos as $prato) { ?>
             <div class="col">
+
                 <div class="card h-100 shadow-sm">
                     <a href="detalhe_prato.php?id=<?= $prato['id'] ?>" class="text-decoration-none text-dark">
                         <img src="uploads/<?= isset($prato['imagem']) ? htmlspecialchars($prato['imagem']) : 'sem-imagem.jpg'; ?>"
@@ -71,6 +92,7 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
                             <h5 class="card-title"><?= htmlspecialchars($prato['nome']) ?></h5>
                         </div>
                     </a>
+
                     <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
                         <span class="fw-bold fs-5 mb-0">R$ <?= number_format($prato['preco'], 2, ',', '.') ?></span>
                         <form action="carrinho_adicionar.php" method="post" class="mb-0">
@@ -78,6 +100,7 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
                             <button type="submit" class="btn btn-primary btn-sm px-3">Adicionar</button>
                         </form>
                     </div>
+
                 </div>
             </div>
 
