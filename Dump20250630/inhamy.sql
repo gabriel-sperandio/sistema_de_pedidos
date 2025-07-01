@@ -49,7 +49,7 @@ CREATE TABLE `itens_pedido` (
   `quantidade` int NOT NULL DEFAULT '1',
   `preco_unitario` decimal(10,2) NOT NULL COMMENT 'Preço no momento do pedido (para histórico)',
   `observacoes` varchar(255) DEFAULT NULL COMMENT 'Observações específicas para este item'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `itens_pedido`
@@ -76,7 +76,7 @@ CREATE TABLE `pedidos` (
   `observacoes` text COMMENT 'Observações do cliente sobre o pedido',
   `forma_pagamento` varchar(50) DEFAULT NULL COMMENT 'cartao, dinheiro, pix, etc',
   `endereco_entrega` varchar(255) DEFAULT NULL COMMENT 'Para pedidos de delivery'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `pedidos`
@@ -103,7 +103,7 @@ CREATE TABLE `pratos` (
   `preco` decimal(10,2) NOT NULL,
   `imagem` varchar(255) DEFAULT NULL COMMENT 'caminho da imagem',
   `ativo` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `pratos`
@@ -127,7 +127,7 @@ CREATE TABLE `usuarios` (
   `senha` varchar(255) NOT NULL COMMENT 'Hash bcrypt',
   `is_admin` tinyint(1) DEFAULT '0' COMMENT '1=admin, 0=comum',
   `data_cadastro` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `usuarios`
