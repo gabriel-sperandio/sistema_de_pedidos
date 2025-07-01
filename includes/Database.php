@@ -7,8 +7,8 @@ class Database
     {
         $host = 'localhost';
         $db   = 'inhamy';
-        $user = 'root';
-        $pass = 'Biel/20041309';
+        $user = 'inhamy';
+        $pass = 'senha123';
         $charset = 'utf8mb4';
 
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
