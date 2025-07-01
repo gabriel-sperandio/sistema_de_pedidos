@@ -58,7 +58,7 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
 
     <style>
         .card:hover {
-            background-color:rgb(187, 245, 192);
+            background-color: rgb(235, 231, 173);
             /* cor de fundo ao passar o mouse */
             transition: background-color 0.3s ease;
             /* suaviza a transição */
@@ -107,5 +107,7 @@ $pratosFavoritos = array_slice($pratosFiltrados, 0, 3);
         <?php } ?>
     </div>
 </div>
+
+</html>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>
